@@ -1,39 +1,231 @@
 <!doctype html>
-<html lang="fr">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GDScript Academy</title>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GDScript Academy</title>
 <style>
-:root{--bg:#0b0d12;--panel:#121722;--panel2:#171d29;--text:#f5f7fb;--muted:#9ba6b8;--accent:#7c5cff;--accent2:#22d3ee;--ok:#38d39f;--border:#283142}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Arial,sans-serif}button{font:inherit}.app{min-height:100vh;background:var(--bg)}header{position:sticky;top:0;z-index:5;background:rgba(11,13,18,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:16px 20px}.top{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:15px}.brand{font-weight:900;font-size:20px}.brand span{color:var(--accent2)}.progress{font-size:13px;color:var(--muted)}.bar{width:130px;height:7px;background:#252c39;border-radius:99px;overflow:hidden;margin-top:5px}.fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0}.layout{max-width:1100px;margin:auto;display:grid;grid-template-columns:260px 1fr;gap:22px;padding:22px 20px}.side{position:sticky;top:86px;height:calc(100vh - 110px);overflow:auto}.side h3{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.lesson{width:100%;text-align:left;border:1px solid var(--border);background:var(--panel);color:var(--text);padding:11px;border-radius:12px;margin:5px 0;cursor:pointer}.lesson:hover,.lesson.active{border-color:var(--accent);background:var(--panel2)}.lesson small{display:block;color:var(--muted);margin-top:3px}.content{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:28px;min-height:650px}.tag{display:inline-block;padding:5px 9px;border-radius:999px;background:#20263a;color:#bfc7ff;font-size:12px}.hero h1{font-size:34px;margin:12px 0 8px}.hero p{color:var(--muted);line-height:1.65}.card{background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:18px;margin:18px 0}pre{background:#090b10;border:1px solid #222938;padding:16px;border-radius:12px;overflow:auto;line-height:1.55;position:relative}code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px}.copy{float:right;border:1px solid var(--border);background:#151a24;color:#dce3ef;padding:5px 9px;border-radius:8px;cursor:pointer}.exercise{border-left:4px solid var(--accent2);padding-left:15px}.choices button{display:block;width:100%;text-align:left;margin:8px 0;padding:11px 13px;border-radius:10px;border:1px solid var(--border);background:#111722;color:var(--text);cursor:pointer}.choices button:hover{border-color:var(--accent2)}.feedback{margin-top:10px;color:var(--muted)}.nav{display:flex;justify-content:space-between;gap:10px;margin-top:24px}.nav button{border:1px solid var(--border);background:#171d29;color:var(--text);padding:11px 15px;border-radius:10px;cursor:pointer}.nav .next{background:var(--accent);border-color:var(--accent)}.homegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}.stat{padding:15px;border:1px solid var(--border);background:var(--panel2);border-radius:13px}.stat b{font-size:24px}.muted{color:var(--muted)}@media(max-width:780px){.layout{grid-template-columns:1fr;padding:12px}.side{position:static;height:auto;display:flex;overflow:auto;gap:6px}.side h3{display:none}.lesson{min-width:180px}.content{padding:20px}.hero h1{font-size:28px}.homegrid{grid-template-columns:1fr 1fr}.top{align-items:flex-start}}@media(max-width:430px){.homegrid{grid-template-columns:1fr}}
-</style></head>
-<body><div class="app">
-<header><div class="top"><div class="brand">GDScript <span>Academy</span></div><div class="progress">Progression <div class="bar"><div class="fill" id="fill"></div></div></div></div></header>
-<div class="layout"><aside class="side" id="menu"><h3>Leçons</h3></aside><main class="content" id="content"></main></div></div>
+:root{--bg:#080b10;--card:#111722;--card2:#0d131d;--text:#f4f7fb;--muted:#93a0b3;--accent:#66e3a1;--red:#ff6b7a;--border:#243043;--code:#070a0f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+.app{max-width:900px;margin:auto;padding:18px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-size:22px;font-weight:800}.brand span{color:var(--accent)}
+button{border:1px solid var(--border);background:#151d29;color:var(--text);padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px}
+button:hover{background:#1c2636}
+button:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);color:#06210f;border-color:var(--accent)}
+.stats{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-top:14px}
+.progress{height:8px;background:#1b2431;border-radius:99px;overflow:hidden;margin:6px 0 20px}
+.bar{height:100%;width:0;background:var(--accent);transition:width .3s}
+.grid{display:grid;grid-template-columns:220px 1fr;gap:16px;align-items:start}
+.lessons,.panel{background:var(--card);border:1px solid var(--border);border-radius:16px}
+.lessons{padding:8px;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+.lesson{padding:10px;border-radius:10px;cursor:pointer;color:var(--muted);margin:2px 0}
+.lesson.active{background:#1c2938;color:#fff}
+.lesson.done{color:var(--accent)}
+.panel{padding:20px;min-width:0}
+.tag{display:inline-block;color:var(--accent);background:#143326;padding:5px 9px;border-radius:99px;font-size:12px;font-weight:800}
+.h{font-size:28px;margin:10px 0}
+.desc{color:var(--muted);line-height:1.6}
+h3{font-size:16px}
+.example{background:var(--code);border:1px solid var(--border);border-radius:12px;padding:14px;padding-top:42px;font:14px/1.5 ui-monospace,Consolas,monospace;white-space:pre-wrap;color:#dce6f5;position:relative;overflow-x:auto}
+.copy{position:absolute;right:8px;top:8px;padding:6px 9px;font-size:12px}
+.k{color:#ff8fa3}.s{color:#9df0bf}.c{color:#6b7a90;font-style:italic}.n{color:#ffd36a}.a{color:#68a7ff}
+.challenge{margin-top:18px;background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:16px}
+.challenge h3{margin-top:0}
+.editor{width:100%;min-height:170px;background:var(--code);color:#e9eef7;border:1px solid var(--border);border-radius:12px;padding:14px;font:14px/1.5 ui-monospace,Consolas,monospace;resize:vertical;tab-size:4}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.result{margin-top:10px;padding:11px;border-radius:10px;display:none;line-height:1.5}
+.ok{display:block;background:#123523;color:#9df0bf}
+.bad{display:block;background:#3a1820;color:#ffadb6}
+.hint{color:#ffd36a;font-size:14px;margin-top:10px;display:none;line-height:1.5}
+.hint code{background:#2a2410;padding:2px 6px;border-radius:6px}
+.nav{display:flex;justify-content:space-between;margin-top:18px}
+.mobileNav{display:none}
+@media(max-width:700px){
+.grid{grid-template-columns:1fr}.lessons{display:none}
+.mobileNav{display:flex;gap:6px;overflow:auto;margin-bottom:12px;position:sticky;top:0;background:var(--bg);padding:6px 0;z-index:5}
+.mobileNav button{white-space:nowrap;padding:8px 12px}
+.mobileNav button.active{background:#1c2938;border-color:var(--accent)}
+.mobileNav button.done{color:var(--accent)}
+.h{font-size:24px}.app{padding:12px}}
+@media(prefers-reduced-motion:reduce){.bar{transition:none}}
+.lvl{color:var(--text);font-weight:800;font-size:12px;margin:12px 6px 4px}.lvl:first-child{margin-top:4px}.lesson small{float:right;opacity:.7}.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.tabs button{padding:6px 10px;font-size:13px}.tabs button.on{border-color:var(--accent);background:#1c2938}.tabs button.done{color:var(--accent)}
+</style></head><body><main class="app">
+<div class="top"><div class="brand">GDScript <span>Academy</span></div><button onclick="resetProgress()">Réinitialiser</button></div>
+<div class="stats"><span id="count"></span><span id="pct"></span></div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="mobileNav" id="mobileNav"></div>
+<div class="grid"><aside class="lessons" id="lessons"></aside>
+<section class="panel"><div id="content"></div>
+<div class="nav"><button onclick="go(Math.max(0,cur-1))">← Leçon précédente</button><button onclick="next()">Leçon suivante →</button></div></section></div>
+</main>
 <script>
-const lessons=[
-['var','Variables','Stocker une information',`var vie = 100\nvar niveau = 1\nvar nom = "Aventurier"`,'Crée argent = 500, force = 20 et nom = "Aventurier".'],
-['if','Conditions','Prendre une décision',`var vie = 100\n\nif vie <= 0:\n    print("Game Over")`,'Affiche "Tu as gagné !" si niveau >= 10.'],
-['else','Sinon','Faire autre chose si la condition est fausse',`if vie > 0:\n    print("Tu es vivant")\nelse:\n    print("Tu es mort")`,'Que va afficher le code si vie = 0 ?'],
-['func','Fonctions','Créer une action réutilisable',`func dire_bonjour():\n    print("Bonjour !")\n\ndire_bonjour()`,'Crée une fonction attaquer() qui affiche "Attaque !".'],
-['return','Return','Renvoyer une valeur',`func additionner(a, b):\n    return a + b\n\nvar resultat = additionner(5, 3)`,'Quelle valeur est renvoyée ?'],
-['Input','Input','Détecter les commandes du joueur',`if Input.is_action_pressed("ui_right"):\n    print("Droite")`,'Quelle action utiliserais-tu pour la gauche ?'],
-['velocity','Velocity','Gérer la vitesse',`velocity.x = 200\nmove_and_slide()`,'À quoi sert velocity ?'],
-['extends','Extends','Définir ce que le script contrôle',`extends CharacterBody2D`,'Quel nœud est courant pour un personnage 2D ?'],
-['@onready','Onready','Récupérer un nœud de la scène',`@onready var barre_vie = $BarreVie`,'Que récupère $BarreVie ?'],
-['@export','Export','Modifier une valeur dans l’Inspecteur',`@export var vitesse = 200.0`,'Pourquoi utiliser @export ?'],
-['for','For','Répéter une action un nombre de fois',`for i in range(5):\n    print("Coup !")`,'Combien de fois "Coup !" est-il affiché ?'],
-['while','While','Répéter tant qu’une condition est vraie',`var vie = 3\nwhile vie > 0:\n    print(vie)\n    vie -= 1`,'Quand la boucle s’arrête-t-elle ?'],
-['signal','Signal','Faire communiquer des éléments',`signal vie_changee\n\nvie_changee.emit()`,'Donne un exemple d’événement qui peut utiliser un signal.'],
-['await','Await','Attendre un événement ou un délai',`await get_tree().create_timer(2.0).timeout\nprint("2 secondes sont passées")`,'Combien de secondes le code attend-il ?'],
-['class','Classes','Créer des types réutilisables',`class_name Ennemi\n\nvar vie = 100\nvar force = 10\n\nfunc attaquer():\n    print("L'ennemi attaque !")`,'Donne un exemple de classe utile dans un jeu.']
-];
-let current=0;let done=JSON.parse(localStorage.getItem('gd_done')||'[]');
-const menu=document.getElementById('menu');
-lessons.forEach((l,i)=>{let b=document.createElement('button');b.className='lesson';b.innerHTML=`${i+1}. <b>${l[0]}</b><small>${l[1]}</small>`;b.onclick=()=>show(i);menu.appendChild(b)});
-function esc(s){return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')}
-function show(i){current=i;let l=lessons[i];document.querySelectorAll('.lesson').forEach((b,n)=>b.classList.toggle('active',n===i));document.getElementById('content').innerHTML=`<section class="hero"><span class="tag">Leçon ${i+1} / 15</span><h1>${l[0]} — ${l[1]}</h1><p>${l[2]}. Apprends avec un exemple directement utilisable dans Godot.</p></section><div class="card"><h2>💻 Exemple</h2><pre><button class="copy" onclick="copyCode()">Copier</button><code id="code">${esc(l[3])}</code></pre></div><div class="card exercise"><h2>🎯 Exercice</h2><p>${l[4]}</p><div class="choices"><button onclick="mark()">J’ai compris cette leçon ✓</button></div><div class="feedback" id="feedback"></div></div><div class="homegrid"><div class="stat"><b>${i+1}</b><div class="muted">Leçon actuelle</div></div><div class="stat"><b>${done.length}</b><div class="muted">Leçons maîtrisées</div></div><div class="stat"><b>15</b><div class="muted">Objectif</div></div></div><div class="nav"><button ${i===0?'disabled':''} onclick="show(${i-1})">← Précédent</button><button class="next" ${i===14?'disabled':''} onclick="show(${i+1})">Suivant →</button></div>`;update()}
-function mark(){if(!done.includes(current)){done.push(current);localStorage.setItem('gd_done',JSON.stringify(done))}document.getElementById('feedback').textContent='✅ Leçon validée ! Passe à la suivante quand tu es prêt.';update()}
-function update(){document.getElementById('fill').style.width=(done.length/15*100)+'%'}
-function copyCode(){navigator.clipboard?.writeText(lessons[current][3]);document.querySelector('.copy').textContent='Copié ✓';setTimeout(()=>document.querySelector('.copy').textContent='Copier',1000)}
-show(0);
+/* Niveau n = n+1 exercices par leçon. Leçon : [titre, explication, exemple, [[consigne, solution], ...]] */
+const LV=[
+[ /* Niveau 1 : 2 exercices */
+['Variables','Une variable stocke une information. On la crée avec le mot-clé var.','var vie = 100\nvar nom = "Aventurier"',[
+['Crée une variable score avec la valeur 0.','var score = 0'],
+['Crée une variable joueur contenant le texte "Lina".','var joueur = "Lina"']]],
+['if','Un if exécute du code seulement si la condition est vraie. N’oublie pas les deux-points et l’indentation.','var vie = 100\n\nif vie <= 0:\n    print("Game Over")',[
+['Écris var score = 12 puis un if qui affiche "Bravo" si score > 10.','var score = 12\nif score > 10:\n    print("Bravo")'],
+['Écris var pieces = 5 puis un if qui affiche "Riche" si pieces == 5.','var pieces = 5\nif pieces == 5:\n    print("Riche")']]],
+['else','else s’exécute quand la condition du if est fausse.','if vie > 0:\n    print("Vivant")\nelse:\n    print("Mort")',[
+['Écris var age = 20. Affiche "Majeur" si age >= 18, sinon "Mineur".','var age = 20\nif age >= 18:\n    print("Majeur")\nelse:\n    print("Mineur")'],
+['Écris var mana = 0. Affiche "Sort lancé" si mana > 0, sinon "Pas de mana".','var mana = 0\nif mana > 0:\n    print("Sort lancé")\nelse:\n    print("Pas de mana")']]]
+],[ /* Niveau 2 : 3 exercices */
+['func','Une fonction est une action réutilisable. On la définit avec func, puis on l’appelle par son nom.','func attaquer():\n    print("Attaque !")\n\nattaquer()',[
+['Crée une fonction saluer() qui affiche "Salut", puis appelle-la.','func saluer():\n    print("Salut")\n\nsaluer()'],
+['Crée une fonction soigner() qui affiche "Soin".','func soigner():\n    print("Soin")'],
+['Crée sauter(hauteur) qui affiche hauteur.','func sauter(hauteur):\n    print(hauteur)']]],
+['return','return renvoie une valeur à celui qui a appelé la fonction.','func additionner(a, b):\n    return a + b',[
+['Crée doubler(x) qui renvoie x * 2.','func doubler(x):\n    return x * 2'],
+['Crée soustraire(a, b) qui renvoie a - b.','func soustraire(a, b):\n    return a - b'],
+['Crée est_mort(vie) qui renvoie vie <= 0.','func est_mort(vie):\n    return vie <= 0']]],
+['for','for répète une action un nombre de fois défini.','for i in range(5):\n    print("Coup !")',[
+['Affiche "Saut" trois fois avec for.','for i in range(3):\n    print("Saut")'],
+['Affiche i pour i de 0 à 4.','for i in range(5):\n    print(i)'],
+['Affiche i * 2 pour chaque i de range(4).','for i in range(4):\n    print(i * 2)']]],
+['while','while répète tant que la condition est vraie. Sans changement de la variable, la boucle ne s’arrête jamais.','var vie = 3\nwhile vie > 0:\n    vie -= 1',[
+['Écris var munitions = 5 puis une boucle qui enlève 1 tant que munitions > 0.','var munitions = 5\nwhile munitions > 0:\n    munitions -= 1'],
+['Écris var x = 0 puis une boucle qui ajoute 1 (x += 1) tant que x < 3.','var x = 0\nwhile x < 3:\n    x += 1'],
+['Écris var pv = 10. Tant que pv > 0, enlève 5 puis affiche pv.','var pv = 10\nwhile pv > 0:\n    pv -= 5\n    print(pv)']]]
+],[ /* Niveau 3 : 4 exercices */
+['Tableaux','Un tableau range plusieurs valeurs dans l’ordre. Le premier élément a l’index 0.','var armes = ["épée", "arc"]\nprint(armes[0])\narmes.append("hache")',[
+['Crée un tableau couleurs contenant "rouge" et "bleu".','var couleurs = ["rouge", "bleu"]'],
+['Avec var nombres = [4, 8, 15], affiche le premier élément.','var nombres = [4, 8, 15]\nprint(nombres[0])'],
+['Avec var couleurs = ["rouge"], ajoute "vert" avec append.','var couleurs = ["rouge"]\ncouleurs.append("vert")'],
+['Avec var nombres = [4, 8, 15], affiche sa taille avec size().','var nombres = [4, 8, 15]\nprint(nombres.size())']]],
+['Dictionnaires','Un dictionnaire associe des clés à des valeurs.','var joueur = {"nom": "Lina", "vie": 100}\nprint(joueur["nom"])',[
+['Crée un dictionnaire arme avec "nom": "Épée" et "degats": 10.','var arme = {"nom": "Épée", "degats": 10}'],
+['Avec var arme = {"degats": 10}, affiche arme["degats"].','var arme = {"degats": 10}\nprint(arme["degats"])'],
+['Avec var arme = {"degats": 10}, change "degats" à 15.','var arme = {"degats": 10}\narme["degats"] = 15'],
+['Avec var arme = {"degats": 10}, ajoute la clé "portee" valant 3.','var arme = {"degats": 10}\narme["portee"] = 3']]],
+['match','match compare une valeur à plusieurs cas. Le cas _ sert de choix par défaut.','match etat:\n    "marche":\n        print("Il marche")\n    _:\n        print("Autre")',[
+['Écris var niveau = 1 puis un match : si 1, affiche "Facile".','var niveau = 1\nmatch niveau:\n    1:\n        print("Facile")'],
+['Même chose, avec un cas 2 en plus qui affiche "Moyen".','var niveau = 1\nmatch niveau:\n    1:\n        print("Facile")\n    2:\n        print("Moyen")'],
+['Même chose, avec le cas par défaut _ qui affiche "Inconnu".','var niveau = 1\nmatch niveau:\n    1:\n        print("Facile")\n    _:\n        print("Inconnu")'],
+['Écris var touche = "haut". Cas "haut" : affiche "Monte". Cas _ : affiche "Rien".','var touche = "haut"\nmatch touche:\n    "haut":\n        print("Monte")\n    _:\n        print("Rien")']]]
+],[ /* Niveau 4 : 5 exercices */
+['extends','extends indique quel type de nœud le script contrôle. C’est la première ligne du script.','extends CharacterBody2D',[
+['Écris la ligne pour un script sur un Node2D.','extends Node2D'],
+['Écris la ligne pour un script sur un Sprite2D.','extends Sprite2D'],
+['Écris la ligne pour un script sur un Area2D.','extends Area2D'],
+['Écris extends Node2D puis une fonction _ready() qui affiche "Prêt".','extends Node2D\n\nfunc _ready():\n    print("Prêt")'],
+['Écris extends Node puis _process(delta) qui affiche delta.','extends Node\n\nfunc _process(delta):\n    print(delta)']]],
+['Input','Input détecte les touches ou boutons pressés par le joueur.','if Input.is_action_pressed("ui_right"):\n    print("Droite")',[
+['Détecte ui_left et affiche "Gauche".','if Input.is_action_pressed("ui_left"):\n    print("Gauche")'],
+['Détecte ui_up et affiche "Haut".','if Input.is_action_pressed("ui_up"):\n    print("Haut")'],
+['Détecte ui_down et affiche "Bas".','if Input.is_action_pressed("ui_down"):\n    print("Bas")'],
+['Avec is_action_just_pressed, détecte ui_accept et affiche "Saut".','if Input.is_action_just_pressed("ui_accept"):\n    print("Saut")'],
+['Crée var dir = Input.get_axis("ui_left", "ui_right").','var dir = Input.get_axis("ui_left", "ui_right")']]],
+['velocity','velocity est la vitesse d’un personnage. move_and_slide() applique ce déplacement.','velocity.x = 200\nmove_and_slide()',[
+['Mets velocity.x à -200 puis appelle move_and_slide().','velocity.x = -200\nmove_and_slide()'],
+['Mets velocity.y à 300 puis appelle move_and_slide().','velocity.y = 300\nmove_and_slide()'],
+['Remets la vitesse à zéro avec Vector2.ZERO.','velocity = Vector2.ZERO'],
+['Mets velocity.x et velocity.y à 100, puis move_and_slide().','velocity.x = 100\nvelocity.y = 100\nmove_and_slide()'],
+['Avec dir et vitesse définis : velocity.x = dir * vitesse, puis move_and_slide().','velocity.x = dir * vitesse\nmove_and_slide()']]],
+['@export','@export rend une variable modifiable depuis l’Inspecteur de Godot, sans toucher au code.','@export var vitesse = 200.0',[
+['Crée une variable exportée vie avec 100.','@export var vie = 100'],
+['Crée une variable exportée nom avec "Hero".','@export var nom = "Hero"'],
+['Crée une variable exportée gravite avec 980.0.','@export var gravite = 980.0'],
+['Crée une variable exportée actif avec true.','@export var actif = true'],
+['Crée une variable exportée vitesse de type float avec 300.0.','@export var vitesse: float = 300.0']]]
+],[ /* Niveau 5 : 6 exercices */
+['@onready','@onready récupère un nœud de la scène quand il est prêt. $ désigne un nœud enfant par son nom.','@onready var barre_vie = $BarreVie',[
+['Récupère le nœud Sprite2D dans une variable sprite.','@onready var sprite = $Sprite2D'],
+['Récupère le nœud Timer dans une variable minuteur.','@onready var minuteur = $Timer'],
+['Récupère le nœud Son (enfant de Audio) dans une variable son.','@onready var son = $Audio/Son'],
+['Récupère le nœud Joueur avec get_node("Joueur") dans joueur.','@onready var joueur = get_node("Joueur")'],
+['Récupère AnimationPlayer dans une variable anim.','@onready var anim = $AnimationPlayer'],
+['Récupère le nœud Score (enfant de UI) dans une variable label.','@onready var label = $UI/Score']]],
+['signal','Un signal permet à une partie du jeu de prévenir les autres qu’il s’est passé quelque chose.','signal vie_changee\n\nvie_changee.emit()',[
+['Déclare un signal mort.','signal mort'],
+['Déclare le signal mort puis émets-le.','signal mort\n\nmort.emit()'],
+['Déclare un signal touche avec un paramètre degats.','signal touche(degats)'],
+['Avec le signal touche(degats) déjà déclaré, émets-le avec 10.','touche.emit(10)'],
+['Connecte le signal mort à la fonction _on_mort.','mort.connect(_on_mort)'],
+['Déclare signal fini, puis une fonction terminer() qui l’émet.','signal fini\n\nfunc terminer():\n    fini.emit()']]],
+['await','await met le code en pause jusqu’à ce qu’un événement arrive, comme la fin d’un timer.','await get_tree().create_timer(2.0).timeout',[
+['Attends 1 seconde avec un timer.','await get_tree().create_timer(1.0).timeout'],
+['Attends 0.5 seconde avec un timer.','await get_tree().create_timer(0.5).timeout'],
+['Affiche "Début", attends 3.0 secondes, puis affiche "Fin".','print("Début")\nawait get_tree().create_timer(3.0).timeout\nprint("Fin")'],
+['Attends la prochaine frame avec process_frame.','await get_tree().process_frame'],
+['Attends 1.5 seconde puis affiche "Boum".','await get_tree().create_timer(1.5).timeout\nprint("Boum")'],
+['Crée une fonction attendre() qui attend 1.0 seconde.','func attendre():\n    await get_tree().create_timer(1.0).timeout']]],
+['class / objets','class_name donne un nom à ton script pour l’utiliser comme un type dans tout le projet.','class_name Ennemi\n\nvar vie = 100',[
+['Crée une classe Joueur avec var vie = 100.','class_name Joueur\n\nvar vie = 100'],
+['Crée une classe Arme avec var degats = 10.','class_name Arme\n\nvar degats = 10'],
+['Crée une classe Boss qui étend Node (class_name puis extends).','class_name Boss\nextends Node'],
+['Crée la classe Ennemi qui étend Node2D avec var vie = 50.','class_name Ennemi\nextends Node2D\n\nvar vie = 50'],
+['Crée un objet : var e = Ennemi.new().','var e = Ennemi.new()'],
+['Crée la classe Ennemi avec var vie = 100 et subir(degats) qui fait vie -= degats.','class_name Ennemi\n\nvar vie = 100\n\nfunc subir(degats):\n    vie -= degats']]]
+]];
+const L=[];LV.forEach((lv,i)=>lv.forEach(x=>L.push({lv:i+1,t:x[0],d:x[1],ex:x[2],e:x[3]})));
+const TOT=L.reduce((s,l)=>s+l.e.length,0),$=id=>document.getElementById(id);
+const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+let cur=+store.get('gda2_cur',0)||0,xi=+store.get('gda2_xi',0)||0,hintLevel=0,done;
+if(cur>=L.length){cur=0;xi=0}
+try{done=JSON.parse(store.get('gda2_done','[]'))}catch(e){done=[]}
+const isDone=(l,x)=>done.includes(l+'-'+x),lessonDone=l=>L[l].e.every((_,x)=>isDone(l,x)),lessonCount=l=>L[l].e.filter((_,x)=>isDone(l,x)).length;
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function hl(s){return esc(s).replace(/("[^"]*")|(#.*)|(@\w+)|\b(var|if|else|func|return|for|in|while|signal|await|extends|class_name|match|true|false)\b|\b(\d+(?:\.\d+)?)\b/g,(m,str,com,at,kw,num)=>str?`<span class="s">${m}</span>`:com?`<span class="c">${m}</span>`:at?`<span class="a">${m}</span>`:kw?`<span class="k">${m}</span>`:`<span class="n">${m}</span>`)}
+/* Forme canonique : ignore commentaires, espaces autour des symboles, ' vs ", :=, types (: float) */
+function canon(s){return s.replace(/\r/g,'').split('\n').map(l=>l.replace(/#.*$/,'')).filter(l=>l.trim()).map(l=>(/^\s/.test(l)?'>':'')+l.trim().replace(/'/g,'"').replace(/\s*:\s*(int|float|bool|String)\b(?=\s*=)/g,'').replace(/:=/g,'=').replace(/\s*([=<>+\-*\/%(),:\[\]{}])\s*/g,'$1').replace(/->\w+/g,'').replace(/\s+/g,' '))}
+
+function render(){
+ const l=L[cur];if(xi>=l.e.length)xi=0;hintLevel=0;store.set('gda2_cur',cur);store.set('gda2_xi',xi);
+ const tabs=l.e.map((_,i)=>`<button class="${i===xi?'on':''} ${isDone(cur,i)?'done':''}" onclick="goEx(${i})">${isDone(cur,i)?'✓ ':''}Ex. ${i+1}</button>`).join('');
+ $('content').innerHTML=`<span class="tag">NIVEAU ${l.lv} · LEÇON ${cur+1}/${L.length}</span><h1 class="h">${esc(l.t)}</h1><p class="desc">${l.d}</p>
+ <h3>📘 Exemple</h3><div class="example"><button class="copy" onclick="copyCode(this)">Copier</button><code>${hl(l.ex)}</code></div>
+ <div class="challenge"><h3>🎯 Exercice ${xi+1} sur ${l.e.length}</h3><div class="tabs">${tabs}</div><p>${esc(l.e[xi][0])}</p>
+ <textarea id="editor" class="editor" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="Écris ton code ici..."></textarea>
+ <div class="actions"><button class="primary" onclick="test()">▶ Tester</button><button onclick="hint()">💡 Indice</button><button onclick="showSolution()">Voir la solution</button></div>
+ <div id="hint" class="hint"></div><div id="result" class="result" role="status"></div></div>`;
+ const ed=$('editor'),k='gda2_code_'+cur+'_'+xi;ed.value=store.get(k,'');
+ ed.addEventListener('input',e=>store.set(k,e.target.value));ed.addEventListener('keydown',editorKeys);
+ updateList();
+}
+function editorKeys(e){
+ const ed=e.target,s=ed.selectionStart,v=ed.value;
+ if(e.key==='Tab'){e.preventDefault();ed.setRangeText('    ',s,ed.selectionEnd,'end');ed.dispatchEvent(new Event('input'))}
+ else if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();test()}
+ else if(e.key==='Enter'&&s===ed.selectionEnd){const line=v.slice(v.lastIndexOf('\n',s-1)+1,s),ind=line.match(/^ */)[0]+(/:\s*$/.test(line)?'    ':'');e.preventDefault();ed.setRangeText('\n'+ind,s,s,'end');ed.dispatchEvent(new Event('input'))}
+}
+function test(){
+ const l=L[cur],u=canon($('editor').value),s=canon(l.e[xi][1]),r=$('result');
+ if(!u.length){r.className='result bad';r.textContent='✍️ Écris ton code dans l’éditeur avant de tester.';return}
+ let msg='';
+ for(let i=0;i<Math.max(u.length,s.length)&&!msg;i++){
+  const a=u[i],b=s[i];
+  if(a===undefined)msg=`Il manque du code après la ligne ${i}.`;
+  else if(b===undefined)msg=`La ligne ${i+1} est en trop.`;
+  else if(a!==b)msg=a.replace(/^>/,'')===b.replace(/^>/,'')?`Vérifie l’indentation de la ligne ${i+1}.`:`La ligne ${i+1} n’est pas encore correcte.`;
+ }
+ if(!msg){
+  if(!isDone(cur,xi)){done.push(cur+'-'+xi);store.set('gda2_done',JSON.stringify(done))}
+  const more=xi<l.e.length-1,lvDone=L.filter(z=>z.lv===l.lv).every((z,_)=>lessonDone(L.indexOf(z)));
+  r.className='result ok';
+  r.innerHTML=(done.length===TOT?'🏆 Bravo, tu as tout terminé !':lvDone?`🎉 Niveau ${l.lv} terminé !`:'✅ Correct !')+(more?' <button class="primary" onclick="goEx('+(xi+1)+')">Exercice suivant →</button>':cur<L.length-1?' <button class="primary" onclick="next()">Leçon suivante →</button>':'');
+ }else{r.className='result bad';r.textContent='❌ '+msg+' Écris chaque instruction sur sa propre ligne, comme dans l’exemple.'}
+ updateList();
+}
+function hint(){const h=$('hint'),f=L[cur].e[xi][1].split('\n')[0];h.style.display='block';
+ if(hintLevel===0){h.textContent='💡 Relis l’exemple de la leçon et adapte-le à la consigne.';hintLevel=1}
+ else{h.innerHTML='💡 Première ligne attendue : <code>'+esc(f)+'</code>'}}
+function showSolution(){const s=L[cur].e[xi][1];$('editor').value=s;store.set('gda2_code_'+cur+'_'+xi,s)}
+function copyCode(b){try{navigator.clipboard.writeText(L[cur].ex);b.textContent='Copié ✓';setTimeout(()=>b.textContent='Copier',1200)}catch(e){}}
+function updateList(){
+ let h='',last=0;
+ L.forEach((x,i)=>{if(x.lv!==last){last=x.lv;h+=`<div class="lvl">Niveau ${x.lv} · ${x.lv+1} exercices</div>`}
+  h+=`<div class="lesson ${i===cur?'active':''} ${lessonDone(i)?'done':''}" onclick="go(${i})">${lessonDone(i)?'✓ ':''}${esc(x.t)} <small>${lessonCount(i)}/${x.e.length}</small></div>`});
+ $('lessons').innerHTML=h;
+ $('mobileNav').innerHTML=L.map((x,i)=>`<button class="${i===cur?'active':''} ${lessonDone(i)?'done':''}" onclick="go(${i})" aria-label="${esc(x.t)}">${lessonDone(i)?'✓ ':''}${i+1}</button>`).join('');
+ const a=document.querySelector('.mobileNav .active');if(a)a.scrollIntoView({inline:'center',block:'nearest'});
+ const p=Math.round(done.length/TOT*100);$('bar').style.width=p+'%';$('count').textContent=done.length+' / '+TOT+' exercices réussis';$('pct').textContent=p+' %';
+}
+function go(i){cur=i;xi=0;render();window.scrollTo({top:0})}
+function goEx(i){xi=i;render()}
+function next(){if(cur<L.length-1)go(cur+1)}
+function prev(){if(xi>0)goEx(xi-1);else if(cur>0){cur--;xi=L[cur].e.length-1;render()}}
+function resetProgress(){if(confirm('Réinitialiser la progression et ton code ?')){done=[];['gda2_done','gda2_cur','gda2_xi'].forEach(store.del);L.forEach((l,i)=>l.e.forEach((_,x)=>store.del('gda2_code_'+i+'_'+x)));cur=0;xi=0;render()}}
+render();
 </script></body></html>
